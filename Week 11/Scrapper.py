@@ -1,5 +1,16 @@
 import requests
 from bs4 import BeautifulSoup
+import csv 
+
+
+# function to save data on csv file
+def save_to_csv(data, filename):
+    # [(name, price), (name, price), ...]
+    with open(filename, mode="w", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Car Name", "Price"])
+        writer.writerows(data)
+
 
 car =input("Enter manufacturer name:")
 headers = {
@@ -11,33 +22,26 @@ url=f'https://www.pakwheels.com/new-cars/pricelist/{car}'
 
 response=requests.get(url, headers=headers)
 
+car_data = []
+
 if response.status_code == 200:
-    soup=BeautifulSoup(response.text,'html.parser')
-    tables=soup.find_all('table')
+    soup = BeautifulSoup(response.text, 'html.parser')
+    tables = soup.find_all('table')
     for table in tables:
-        rows=table.find_all('tr')
+        rows = table.find_all('tr')
         for row in rows:
-            cols=row.find_all('td')
-            if len(cols)>=2:
-                name=cols[0].get_text()
-                price=cols[1].get_text()
+            cols = row.find_all('td')
+            if len(cols) >= 2:
+                name = cols[0].get_text(strip=True)
+                price = cols[1].get_text(strip=True)
                 print(f"Car Name: {name} - Price: {price}")
-        
-        
-        
-    
-    
-    
-    
-    
-    
-    
+                car_data.append([name, price])  # collect data
+
+    # save to CSV after scraping
+    save_to_csv(car_data, f"{car}_cars.csv")
 else:
     print("Page not available !")
 
-# function to save data on csv file
-def save_to_csv(data, filename):
-    pass
 
 
 
