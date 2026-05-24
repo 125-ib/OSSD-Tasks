@@ -45,7 +45,7 @@ def main():
     global entry_user, entry_pass
 
     root.configure(bg="#f0f4f8")
-    root.geometry("350x400")
+    root.geometry("350x450")
     root.resizable(False, False)
 
     tk.Label(root, text="🔐 Login System", font=("Helvetica", 18, "bold"),
